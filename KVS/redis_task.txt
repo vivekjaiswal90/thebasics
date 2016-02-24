@@ -1,0 +1,167 @@
+<?php
+
+/**
+ * symfony task to
+ * Copy key value and ttl from memcache to Redis
+ * note - if key already exists in redis then not copied to the memcache
+ *
+ * @created 2015/10/16
+ * @author  Sanjeev(sanjeev_chaurasia@epark.co.jp)
+ */
+
+class RedisSessionStorageTask extends sfBaseTask
+{
+  protected $redis = null;
+  protected $memcache = null;
+
+  /**
+   * function to describe the task
+   *
+   * @param void
+   *
+   * @return void
+   */
+  protected function configure()
+  {
+    $this->namespace = 'epark';
+    $this->name = 'redis-session-storage';
+    $this->briefDescription = 'redis session storage from memcache';
+    $this->detailedDescription = 'redis session storage from memcache';
+
+    $this->addOptions(array(
+          new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'dev'),
+      ));
+  }
+
+  /**
+   * function to execute the task
+   * executed on epark:redis-session-storage
+   *
+   * @param array $arguments
+   * @param array $options
+   *
+   * @throws TaskException
+   * @throws TaskStopException
+   */
+  protected function execute($arguments = array(), $options = array())
+  {
+    //geting the context of shop_touch module to fetch value from redis_settings and memcache_settings
+    $configuration = ProjectConfiguration::getApplicationConfiguration('shop_touch', 'dev', true);
+    sfContext::createInstance($configuration);
+    try {
+      $this->copyToRedis();
+    } catch (TaskException $e) {
+      throw $e;
+    } catch (Exception $e) {
+      throw new TaskStopException($e->getMessage());
+    }
+  }
+
+  /**
+   * function to get redis instance from BaseEparkRedisClient
+   *
+   * @param void
+   *
+   * @return Redis instance
+   */
+  protected function getRedisInstance()
+  {
+    //fetching server data from redis_settings.yml
+    $options["servers"] = sfConfig::get("redis_settings_servers");
+    //prefix is not required
+    $options["prefix"] = null;
+    $parameters = $options["servers"];
+    $redis_connection = new EparkPhpRedis();
+    $redis_command = new EparkPhpRedisCommand();
+    $redisObj = new BaseEparkRedisClient($parameters, $options, $redis_connection, $redis_command);
+    return $redisObj;
+  }
+
+  /**
+   * function to get memcache object
+   *
+   * @param void
+   *
+   * @return memcache instance
+   */
+  protected function getMemcacheIntance()
+  {
+    $memcache_server = sfConfig::get('memcache_settings_servers');
+    $memcache = new Memcache();
+    $memcache->addServer($memcache_server["server_1"]["host"], $memcache_server["server_1"]["port"], true);
+    return $memcache;
+  }
+
+  /**
+   * fuction to dump all keys from memcache and copy it to redis server
+   *
+   * @param void
+   *
+   * @return void
+   */
+  private function copyToRedis()
+  {
+    $this->redis = $this->getRedisInstance();
+
+    $this->memcache = $this->getMemcacheIntance();
+
+    $allSlabs = $this->memcache->getExtendedStats('slabs');
+    foreach ($allSlabs as $servers => $slabs) {
+      $limit = 100;
+      $list = array();
+      foreach ($slabs as $slabId => $slabMeta) {
+        if (!is_int($slabId)) {
+          continue;
+        }
+        $cdump = $this->gotoSubs($slabId, $limit);
+
+        foreach ($cdump as $server => $entries) {
+          if ($entries) {
+            foreach ($entries as $eName => $eData) {
+              $key = $eName;
+              $value = $this->memcache->get($eName);
+              $expireIn = $eData[1];
+              $currentTime = time();
+              $ttl = $expireIn - $currentTime;
+              if (!$this->redis->exists($key)) {
+                $this->redis->set($key, $value, $ttl);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * to get the uper limit of the number of keys in given slab
+   *
+   * @param integer $slabId
+   * @param long $limit
+   * @return array
+   */
+  private function gotoSubs($slabId, $limit)
+  {
+    while (true) {
+      $limit = $limit * 10;
+      $cdump = $this->getCacheDump($slabId, $limit);
+      if ($limit > count($cdump, COUNT_RECURSIVE)) {
+        break;
+      }
+    }
+    return $cdump;
+  }
+
+  /**
+   * to get the upper limit of the number of keys in given slab
+   *
+   * @param integer $slabId
+   * @param long $limit
+   * @return array
+   */
+  private function getCacheDump($slabId, $limit)
+  {
+    $cdump = $this->memcache->getExtendedStats('cachedump', (int) $slabId, $limit);
+    return $cdump;
+  }
+}

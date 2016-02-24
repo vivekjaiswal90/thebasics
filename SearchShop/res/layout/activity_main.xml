@@ -1,0 +1,132 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	android:orientation="vertical"
+    tools:context="epark.api.searchshop.MainActivity" >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:text="Search Shop" />
+    
+<LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    <TextView 
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="  access_token"
+        />
+    <EditText 
+        android:id="@+id/access_token"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="access_token"
+        />
+</LinearLayout>
+
+<LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    <TextView 
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="  prefecture_id"
+        />
+    <EditText 
+        android:id="@+id/prefecture_id"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="prefecture_id"
+        />
+</LinearLayout>
+
+<LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    <TextView 
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="  latitude"
+        />
+    <EditText 
+        android:id="@+id/latitude"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="latitude"
+        />
+</LinearLayout>
+
+<LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    <TextView 
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="  longitude"
+        />
+    <EditText 
+        android:id="@+id/longitude"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="longitude"
+        />
+</LinearLayout>
+
+<LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    <TextView 
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="  keyword"
+        />
+    <EditText 
+        android:id="@+id/keyword"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="keyword"
+        />
+</LinearLayout>
+
+<LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal" >
+    <TextView 
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="  page"
+        />
+    <EditText 
+        android:id="@+id/page"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="page"
+        />
+</LinearLayout>
+
+    <Button 
+        android:id="@+id/search"
+        android:layout_width="325dp"
+        android:layout_height="wrap_content"
+        android:text="検索"
+        android:onClick="search"
+        />
+    
+        <TextView 
+        android:id="@+id/resultView"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        />
+</LinearLayout>

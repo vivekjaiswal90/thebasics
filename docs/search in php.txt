@@ -1,0 +1,3 @@
+$ find . \*.php | xargs grep insertMemberPopulation
+
+mysql -h 10.1.133.10 -u epark -phaLqvUjm dev_schaurasia_epark

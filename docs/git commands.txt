@@ -1,0 +1,33 @@
+Steps of Git Operation
+
+ 1. Create a branch.
+ 2. Work on Branch (add needed modifications).
+ 3. add    - this is to stage files that has been modified or added.
+ 4. commit - this is to get files that are staged and the changes are tracked to the remote repository.
+ 5. push   - this will make changes to the remote repository.
+
+Frequently Used Commands
+
+ Branch   :	 Branch create and view or delete branch information
+ Checkout :	 Switching and transfer of branch
+ Add      :	 To the file specification in order to commit the changes (staging)
+　Commit   :  After performing the add, recording Change log remote repositories
+　Diff     :	 for display in diff format changes that have been made to the file
+　Fetch    :	 want to retrieve data from a remote repository
+　Grep     :	 search for files
+　Log      :	 see the commit log
+　Merge    :	 By integrating the branch
+　Pull     :	 Be reflected in the local repository changes made to a remote repository
+　Push     :  Be reflected the changes in the remote repository to the local repository
+　Stash    :	 And temporarily stores the changes of work time
+　Status   :	 I want to display a file-by-file basis the change status
+
+Git Commands
+
+ 1. $ git branch                     - displays the name of existing branch
+ 2. $ git checkout branch-name       - switch to the branch 
+ 3. $ git pull                       - reflects the changes made in the remote repository within current branch
+ 4. $ git branch phaseX-XXXX         - create a new branch phaseX-XXXX
+ 5. $ git push origin phaseX-XXXX –u - add branch (phaseX-XXXX) in remote repository.
+ 6. $ git branch –r
+ 7. $ git branch --track Branch Name origin / branch name - 

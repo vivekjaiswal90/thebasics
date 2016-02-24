@@ -1,0 +1,13 @@
+ALTER TABLE `shop_information` ADD `xl_category_id` TINYINT AFTER `disp_type`;
+
+ALTER TABLE `shop_information` ADD `big_category_id` INTEGER AFTER `xl_category_id`;
+
+ALTER TABLE `shop_information` ADD `mid_category_id` INTEGER AFTER `big_category_id`;
+
+
+ALTER TABLE t_cardbook_account
+ADD add_price_point INTEGER UNSIGNED default 0 COMMENT '金額付与ポイント' AFTER item_total_price;
+
+CREATE INDEX ix_t_mem_cardlist_shop3 ON t_mem_cardlist_shop (shop_id ASC, barcode_text ASC, barcode_type ASC);
+
+DROP INDEX ix_t_mem_cardlist_shop1 ON t_mem_cardlist_shop;
